@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
 using XDomainProxy.Handlers;
+using  Config = System.Web.Configuration.WebConfigurationManager;
 
 namespace XDomainProxy
 {
@@ -14,7 +15,7 @@ namespace XDomainProxy
             
             config.Routes.Clear();
             //Web Api Proxy 
-            config.Routes.MapHttpRoute(name: "Proxy", routeTemplate: "{*path}", handler:
+            config.Routes.MapHttpRoute(name: "Proxy", routeTemplate: Config.AppSettings["Proxy:RouteTemplate"] ?? "{*path}", handler:
             HttpClientFactory.CreatePipeline
             (
                 innerHandler: new HttpClientHandler(), // will never get here if proxy is doing its job

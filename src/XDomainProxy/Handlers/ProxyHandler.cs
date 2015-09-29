@@ -22,6 +22,10 @@ namespace XDomainProxy.Handlers
             //send it on to the requested URL
             request.RequestUri = forwardUri.Uri;
 
+            //have to explicitly null it to avoid protocol violation
+            if (request.Method == HttpMethod.Get)
+                request.Content = null;
+
             var client = new HttpClient();
 
             var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
