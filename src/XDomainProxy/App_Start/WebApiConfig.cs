@@ -12,10 +12,16 @@ namespace XDomainProxy
     {
         public static void Register(HttpConfiguration config)
         {
+            //if ((Config.AppSettings["Proxy:EnableCors"] ?? "false").ToLower() == "true")
+            //{
+            //    config.EnableCors();
+            //}
             
+
             config.Routes.Clear();
+            
             //Web Api Proxy 
-            config.Routes.MapHttpRoute(name: "Proxy", routeTemplate: Config.AppSettings["Proxy:RouteTemplate"] ?? "{*path}", handler:
+            config.Routes.MapHttpRoute(name: "Proxy", routeTemplate: "{*path*}", handler:
             HttpClientFactory.CreatePipeline
             (
                 innerHandler: new HttpClientHandler(), // will never get here if proxy is doing its job

@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Configuration;
+using Microsoft.Ajax.Utilities;
 using Config = System.Web.Configuration.WebConfigurationManager;
 
 namespace XDomainProxy.Handlers
@@ -25,10 +26,17 @@ namespace XDomainProxy.Handlers
             //have to explicitly null it to avoid protocol violation
             if (request.Method == HttpMethod.Get)
                 request.Content = null;
-
+            
             var client = new HttpClient();
 
             var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+
+            //in case source request contain an access control header remove it 
+            //and replace with our
+            response.Headers.Remove("Access-Control-Allow-Origin");
+            response.Headers.Add("Access-Control-Allow-Origin", "*");
+
+
             return response;
         }
 
